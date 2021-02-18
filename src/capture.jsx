@@ -31,9 +31,18 @@ class Capture extends React.Component {
     });
   }
 
+  _stopStreamedVideo = (videoElem) => {
+    const stream = videoElem.srcObject;
+    const tracks = stream.getTracks();
+    tracks.forEach((track) => {
+      track.stop();
+    });
+    videoElem.srcObject = null;
+  }
+
   _stop = () => {
     const video = this.videoRef.current;
-    video.srcObject = null;
+    this._stopStreamedVideo(video);
     this._clear();
   }
 
@@ -67,7 +76,6 @@ class Capture extends React.Component {
 
   _clear = () => {
     const canvas = this.canvasRef.current;
-    // this.ctx.fillStyle = '#AAA';
     this.ctx.clearRect(0, 0, this.state.width, this.state.height);
 
     const data = canvas.toDataURL('image/jpeg');
@@ -94,4 +102,3 @@ class Capture extends React.Component {
 }
 
 export default Capture;
-
