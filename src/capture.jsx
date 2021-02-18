@@ -41,8 +41,16 @@ const styles = {
     height: '50px',
     width: '100%',
     backgroundColor: 'rgb(0,0,0)',
-    position: 'relative'
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between'
   }
+};
+
+const CAMERA_TYPES = {
+  USER: 'user',
+  ENVIRONMENT: 'environment'
 };
 
 class Capture extends React.Component {
@@ -57,11 +65,13 @@ class Capture extends React.Component {
       width: 320,
       height: 400,
       imgData: null,
-      blob: null
+      blob: null,
+      camera: CAMERA_TYPES.ENVIRONMENT
     };
   }
 
   componentDidMount = () => {
+    console.log(this.state.camera);
     this.ctx = this.canvasRef.current.getContext('2d');
     this._startup();
   }
@@ -79,12 +89,13 @@ class Capture extends React.Component {
       imgData: url,
       blob
     });
-    // URL.revokeObjectURL(url);
   }
 
   _startup = () => {
     const video = this.videoRef.current;
-    navigator.mediaDevices.getUserMedia({video: true, audio: false})
+    navigator.mediaDevices.getUserMedia({video: {
+      facingMode: this.state.camera
+    }, audio: false})
     .then(function (stream) {
       video.srcObject = stream;
       video.play();
@@ -156,6 +167,19 @@ class Capture extends React.Component {
     });
   }
 
+  toggleCamera = (currentCamera, callback) => {
+    const camera = currentCamera === CAMERA_TYPES.ENVIRONMENT ? CAMERA_TYPES.USER : CAMERA_TYPES.ENVIRONMENT;
+    this.setState({
+      camera
+    }, callback);
+  }
+
+  onCameraChangeButtonClickHandler = () => {
+    const video = this.videoRef.current;
+    this._stopStreamedVideo(video);
+    this.toggleCamera(this.state.camera, this._startup);
+  }
+
   render = () => {
     return (
       <div className="capture-mask" style={styles.mask}>
@@ -174,7 +198,9 @@ class Capture extends React.Component {
             </div>
           </div>
           <div className="controls-wrapper" style={styles.controlsWrapper}>
+            <button className="change-cam" onClick={this.onCameraChangeButtonClickHandler}>Change Camera</button>
             <button id="snapshot" onClick={this._takePicture} style={styles.snapshotBtn}>Take photo</button>
+            <button id="snapshot" onClick={this.props.onBackButtonClick}>Go back</button>
           </div>
           <canvas ref={this.canvasRef} id="canvas" width={this.state.width} height={this.state.height} style={{display: 'none'}}></canvas>
         </div>
@@ -183,7 +209,8 @@ class Capture extends React.Component {
 }
 
 Capture.propTypes = {
-  onGetData: PropTypes.func
+  onGetData: PropTypes.func,
+  onBackButtonClick: PropTypes.func
 };
 
 export default Capture;

@@ -67,10 +67,9 @@ class Wrapper extends React.Component {
     return (
       <div className="wrapper">
         <button className="getImage" onClick={this.onGetImageButtonClickHandler}>Get Image</button>
-        <button className="cancelgetImage" onClick={this.onCancelClick}>Cancel</button>
         <button className="clear" onClick={this.onClearClick}>Clear</button>
         <button className="send" onClick={this.postData} disabled={this.state.dataUrl ? false : true}>Send Image</button>
-        {this.state.openCapture ? <Capture onGetData={this.onGetImageDataHandler} /> : null}
+        {this.state.openCapture ? <Capture onGetData={this.onGetImageDataHandler} onBackButtonClick={this.onCancelClick}/> : null}
         <div className="captured">
           <img id="photo" alt="The screen capture will appear in this box." src={this.state.dataUrl}/>
         </div>
