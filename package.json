@@ -1,0 +1,30 @@
+{
+  "name": "camera-capture",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack serve",
+    "test": "npm run eslint"
+  },
+  "author": "MasterOfMenace",
+  "license": "ISC",
+  "dependencies": {
+    "prop-types": "15.7.2",
+    "react": "17.0.1",
+    "react-dom": "17.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "7.12.16",
+    "@babel/plugin-proposal-class-properties": "7.12.13",
+    "@babel/preset-env": "7.12.16",
+    "@babel/preset-react": "7.12.13",
+    "babel-eslint": "10.1.0",
+    "eslint": "7.20.0",
+    "eslint-config-htmlacademy": "2.1.0",
+    "eslint-plugin-babel": "5.3.1",
+    "eslint-plugin-react": "7.22.0",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^4.1.0"
+  }
+}

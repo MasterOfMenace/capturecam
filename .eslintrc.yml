@@ -1,0 +1,32 @@
+env:
+  es6: true
+  browser: true
+  commonjs: true
+  jest: true
+
+extends: ['htmlacademy/es6', 'plugin:react/recommended']
+
+parser: "babel-eslint"
+
+parserOptions:
+  ecmaFeatures:
+    jsx: true
+  ecmaVersion: 9
+  sourceType: module
+
+plugins: ['react', 'babel']
+
+settings:
+  react:
+    version: '16'
+
+rules: {
+  react/sort-comp: [2],
+  quotes: [
+    'error',
+    'single'
+  ],
+  no-console: 'off',
+  no-invalid-this: 0,
+  babel/no-invalid-this: 1
+}
