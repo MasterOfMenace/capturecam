@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Capture from './capture';
 
 ReactDOM.render(
-    <div><p>HELLO WORLD</p></div>,
+    <Capture />,
     document.querySelector('#root')
 );

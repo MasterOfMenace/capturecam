@@ -29,6 +29,6 @@ module.exports = {
     minimize: false
   },
   resolve: {
-    extensions: ['.js', 'jsx']
+    extensions: ['.js', '.jsx']
   }
 };
