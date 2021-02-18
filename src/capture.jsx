@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class Capture extends React.Component {
   constructor(props) {
@@ -11,12 +12,29 @@ class Capture extends React.Component {
       streaming: false,
       width: 320,
       height: 0,
-      imgData: null
+      imgData: null,
+      blob: null
     };
   }
 
   componentDidMount = () => {
     this.ctx = this.canvasRef.current.getContext('2d');
+  }
+
+  componentWillUnmount = () => {
+    console.log('capture unmounted');
+  }
+
+  someWorkWithBlob = (blob) => {
+    const url = URL.createObjectURL(blob);
+    console.log(blob);
+    console.log(url);
+    blob.lastModified = Date.now();
+    this.setState({
+      imgData: url,
+      blob
+    });
+    // URL.revokeObjectURL(url);
   }
 
   _startup = () => {
@@ -67,10 +85,7 @@ class Capture extends React.Component {
     if (width && height) {
       this.ctx.drawImage(video, 0, 0, width, height);
 
-      const data = canvas.toDataURL('image/jpeg');
-      this.setState({
-        imgData: data
-      });
+      canvas.toBlob(this.someWorkWithBlob, 'image/jpeg'); // canvas.toBlob() returns undefined
     }
   }
 
@@ -84,6 +99,11 @@ class Capture extends React.Component {
     });
   }
 
+  _onOkButtonClickHandler = () => {
+    this.props.onGetData(this.state.blob);
+    this._stop();
+  }
+
   render = () => {
     return (
       <div className="container">
@@ -92,6 +112,7 @@ class Capture extends React.Component {
         <div className="camera">
           <video id="video" ref={this.videoRef} width={this.state.width} height={this.state.height} onCanPlay={this._canPlay}>Video stream not available.</video>
           <button id="startbutton" onClick={this._takePicture}>Take photo</button>
+          <button id="okButton" onClick={this._onOkButtonClickHandler}>Ok</button>
         </div>
         <canvas ref={this.canvasRef} id="canvas" width={this.state.width} height={this.state.height} style={{display: 'none'}}></canvas>
         <div className="output">
@@ -100,5 +121,9 @@ class Capture extends React.Component {
       </div>);
   }
 }
+
+Capture.propTypes = {
+  onGetData: PropTypes.func
+};
 
 export default Capture;

@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Capture from './capture';
+import Wrapper from './wrapper';
 
 ReactDOM.render(
-    <Capture />,
+    <Wrapper />,
     document.querySelector('#root')
 );
