@@ -32,6 +32,13 @@ class Wrapper extends React.Component {
     });
   }
 
+  onClearClick = () => {
+    this.setState({
+      blob: null,
+      dataUrl: ''
+    });
+  }
+
   getUrlFromBlob = (blob) => {
     return URL.createObjectURL(blob);
   }
@@ -61,6 +68,7 @@ class Wrapper extends React.Component {
       <div className="wrapper">
         <button className="getImage" onClick={this.onGetImageButtonClickHandler}>Get Image</button>
         <button className="cancelgetImage" onClick={this.onCancelClick}>Cancel</button>
+        <button className="clear" onClick={this.onClearClick}>Clear</button>
         <button className="send" onClick={this.postData} disabled={this.state.dataUrl ? false : true}>Send Image</button>
         {this.state.openCapture ? <Capture onGetData={this.onGetImageDataHandler} /> : null}
         <div className="captured">

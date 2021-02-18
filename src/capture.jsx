@@ -1,6 +1,50 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+const styles = {
+  mask: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: '100%',
+    height: '100%',
+    background: 'rgba(255,255,255, 0.9)',
+    display: 'flex'
+  },
+  container: {
+    width: '320px',
+    margin: 'auto'
+  },
+  output: {
+    width: '320px',
+    height: '400px',
+    position: 'absolute',
+    left: 0,
+    top: 0
+  },
+  camera: {
+    position: 'relative',
+    background: 'black'
+  },
+  snapshotBtn: {
+    fontSize: 0,
+    width: '40px',
+    height: '40px',
+    borderRadius: '50%',
+    border: '1px solid black',
+    backgroundColor: 'white',
+    position: 'absolute',
+    left: 'calc(50% - 20px)',
+    bottom: '10%'
+  },
+  controlsWrapper: {
+    height: '50px',
+    width: '100%',
+    backgroundColor: 'rgb(0,0,0)',
+    position: 'relative'
+  }
+};
+
 class Capture extends React.Component {
   constructor(props) {
     super(props);
@@ -11,7 +55,7 @@ class Capture extends React.Component {
     this.state = {
       streaming: false,
       width: 320,
-      height: 0,
+      height: 400,
       imgData: null,
       blob: null
     };
@@ -19,6 +63,7 @@ class Capture extends React.Component {
 
   componentDidMount = () => {
     this.ctx = this.canvasRef.current.getContext('2d');
+    this._startup();
   }
 
   componentWillUnmount = () => {
@@ -100,23 +145,38 @@ class Capture extends React.Component {
   }
 
   _onOkButtonClickHandler = () => {
-    this.props.onGetData(this.state.blob);
     this._stop();
+    this.props.onGetData(this.state.blob);
+  }
+
+  _onCancelButtonClickHandler = () => {
+    this.setState({
+      blob: null,
+      imgData: null
+    });
   }
 
   render = () => {
     return (
-      <div className="container">
-        <button className="activate" onClick={this._startup}>Start</button>
-        <button className="activate" onClick={this._stop}>Stop</button>
-        <div className="camera">
-          <video id="video" ref={this.videoRef} width={this.state.width} height={this.state.height} onCanPlay={this._canPlay}>Video stream not available.</video>
-          <button id="startbutton" onClick={this._takePicture}>Take photo</button>
-          <button id="okButton" onClick={this._onOkButtonClickHandler}>Ok</button>
-        </div>
-        <canvas ref={this.canvasRef} id="canvas" width={this.state.width} height={this.state.height} style={{display: 'none'}}></canvas>
-        <div className="output">
-          <img id="photo" alt="The screen capture will appear in this box." ref={this.imageRef} src={this.state.imgData}/>
+      <div className="capture-mask" style={styles.mask}>
+        <div className="capture-container" style={styles.container}>
+          <div className="controls-wrapper" style={styles.controlsWrapper}>
+            {this.state.imgData ? <button id="okButton" onClick={this._onOkButtonClickHandler}>Ok</button> : null}
+            {this.state.imgData ? <button id="okButton" onClick={this._onCancelButtonClickHandler}>Cancel</button> : null}
+          </div>
+          <div className="camera" style={styles.camera}>
+            <video id="video" ref={this.videoRef} width={this.state.width} height={this.state.height} onCanPlay={this._canPlay}>Video stream not available.</video>
+            <div className="output" style={{
+              ...styles.output,
+              display: this.state.imgData ? 'block' : 'none'
+            }}>
+              <img id="photo" alt="The screen capture will appear in this box." ref={this.imageRef} src={this.state.imgData}/>
+            </div>
+          </div>
+          <div className="controls-wrapper" style={styles.controlsWrapper}>
+            <button id="snapshot" onClick={this._takePicture} style={styles.snapshotBtn}>Take photo</button>
+          </div>
+          <canvas ref={this.canvasRef} id="canvas" width={this.state.width} height={this.state.height} style={{display: 'none'}}></canvas>
         </div>
       </div>);
   }
