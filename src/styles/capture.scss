@@ -14,8 +14,9 @@
   overflow: hidden;
 }
 
-.capture-mask {
+.capture__mask {
   position: fixed;
+  z-index: 1000;
   left: 0;
   top: 0;
   width: 100%;
@@ -24,7 +25,7 @@
   display: flex;
 }
 
-.capture-container {
+.capture__container {
   width: 320px;
   margin: auto;
 
@@ -33,20 +34,20 @@
   }
 }
 
-.photo {
+.capture__photo {
   width: 320px;
-  height: 400px;
+  height: auto;
   position: absolute;
   left: 0;
   top: 0;
 }
 
-.camera {
+.capture__camera {
   position: relative;
   background: rgb(0,0,0);
 }
 
-.controls-wrapper {
+.capture__controls-wrapper {
   height: 50px;
   width: 100%;
   padding: 0 15px;
@@ -58,7 +59,7 @@
   justify-content: space-between;
 }
 
-.take-photo-button {
+.capture__take-photo-button {
   outline: none;
   cursor: pointer;
   font-size: 0;
@@ -76,13 +77,13 @@
   }
 }
 
-.change-cam-button {
+.capture__change-cam-button {
   cursor: pointer;
   background: transparent;
   border: none;
 }
 
-.go-back-button {
+.capture__go-back-button {
   cursor: pointer;
   background: transparent;
   border: none;
@@ -92,8 +93,8 @@
   color: white;
 }
 
-.ok-button,
-.cancel-button {
+.capture__ok-button,
+.capture__cancel-button {
   display: block;
   cursor: pointer;
   width: 20px;
@@ -104,7 +105,7 @@
   position: relative;
 }
 
-.ok-button {
+.capture__ok-button {
   &::before,
   &::after {
     content: '';
@@ -127,7 +128,7 @@
   }
 }
 
-.cancel-button {
+.capture__cancel-button {
   &::before,
   &::after {
     content: '';

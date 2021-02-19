@@ -147,38 +147,41 @@ class Capture extends React.Component {
 
   render = () => {
     return (
-      <div className="capture-mask">
-        <div className="capture-container">
-          <div className="controls-wrapper">
-            {this.state.imgUrl ? <button className='cancel-button' onClick={this.onCancelButtonClickHandler}>Cancel</button> : null}
-            {this.state.imgUrl ? <button className='ok-button' onClick={this.onOkButtonClickHandler}>Ok</button> : null}
-          </div>
-          <div className="camera">
-            <video id="video" ref={this.videoRef} width={this.state.width} height={this.state.height} onCanPlay={this.onCanPlayHandler}>Video stream not available.</video>
-            <div className="photo" style={{
-              display: this.state.imgUrl ? 'block' : 'none'
-            }}>
-              <img id="photo" alt="The screen capture will appear in this box." ref={this.imageRef} src={this.state.imgUrl}/>
+      <div className="capture">
+        <div className="capture__mask">
+          <div className="capture__container">
+            <div className="capture__controls-wrapper">
+              {this.state.imgUrl ? <button className='capture__cancel-button' onClick={this.onCancelButtonClickHandler}>Cancel</button> : null}
+              {this.state.imgUrl ? <button className='capture__ok-button' onClick={this.onOkButtonClickHandler}>Ok</button> : null}
             </div>
+            <div className="capture__camera">
+              <video id="video" ref={this.videoRef} width={this.state.width} height={this.state.height} onCanPlay={this.onCanPlayHandler}>Video stream not available.</video>
+              <div className="capture__photo" style={{
+                display: this.state.imgUrl ? 'block' : 'none'
+              }}>
+                <img alt="The screen capture will appear in this box." ref={this.imageRef} src={this.state.imgUrl}/>
+              </div>
+            </div>
+            <div className="capture__controls-wrapper">
+              <button className="capture__change-cam-button" onClick={this.onCameraChangeButtonClickHandler}>
+                <svg viewBox="0 0 64 64" width='32' height='32' fill='#FFFFFF'>
+                  <use href={`${switchIcon}#camera-switch`} />
+                </svg>
+                <span className='visually-hidden'>Switch Camera</span>
+              </button>
+              <button className='capture__take-photo-button' onClick={this.takePicture}>Take photo</button>
+              <button className='capture__go-back-button' onClick={this.onBackButtonClickHandler}>
+                <svg viewBox="0 0 38 38" width='34' height='34' fill='#FFFFFF'>
+                  <use href={`${goBackIcon}#go-back-arrow`} />
+                </svg>
+                <span className='visually-hidden'>Назад</span>
+              </button>
+            </div>
+            <canvas ref={this.canvasRef} width={this.state.width} height={this.state.height}></canvas>
           </div>
-          <div className="controls-wrapper">
-            <button className="change-cam-button" onClick={this.onCameraChangeButtonClickHandler}>
-              <svg viewBox="0 0 64 64" width='32' height='32' fill='#FFFFFF'>
-                <use href={`${switchIcon}#camera-switch`} />
-              </svg>
-              <span className='visually-hidden'>Switch Camera</span>
-            </button>
-            <button className='take-photo-button' onClick={this.takePicture}>Take photo</button>
-            <button className='go-back-button' onClick={this.onBackButtonClickHandler}>
-              <svg viewBox="0 0 38 38" width='34' height='34' fill='#FFFFFF'>
-                <use href={`${goBackIcon}#go-back-arrow`} />
-              </svg>
-              <span className='visually-hidden'>Назад</span>
-            </button>
-          </div>
-          <canvas ref={this.canvasRef} width={this.state.width} height={this.state.height}></canvas>
         </div>
-      </div>);
+      </div>
+    );
   }
 }
 
