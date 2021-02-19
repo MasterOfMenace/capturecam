@@ -1,0 +1,150 @@
+.visually-hidden {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+
+  white-space: nowrap;
+
+  clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
+.capture-mask {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255, 0.9);
+  display: flex;
+}
+
+.capture-container {
+  width: 320px;
+  margin: auto;
+
+  canvas {
+    display: none;
+  }
+}
+
+.photo {
+  width: 320px;
+  height: 400px;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.camera {
+  position: relative;
+  background: rgb(0,0,0);
+}
+
+.controls-wrapper {
+  height: 50px;
+  width: 100%;
+  padding: 0 15px;
+  box-sizing: border-box;
+  background-color: rgb(0,0,0);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.take-photo-button {
+  outline: none;
+  cursor: pointer;
+  font-size: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgb(0,0,0);
+  background-color: rgb(255,255,255);
+  position: absolute;
+  left: calc(50% - 20px);
+  bottom: 10%;
+
+  &:active {
+    transform: scale(0.75);
+  }
+}
+
+.change-cam-button {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
+.go-back-button {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+
+.ok-button,
+.cancel-button {
+  display: block;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  background: transparent;
+  border: none;
+  overflow: hidden;
+  position: relative;
+}
+
+.ok-button {
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    background-color: white;
+  }
+  &::before {
+    bottom: 7px;
+    left: 7px;
+    width: 7px;
+    height: 2px;
+    transform: rotate(45deg);
+  }
+  &::after {
+    bottom: 10px;
+    left: 10px;
+    width: 11px;
+    height: 2px;
+    transform: rotate(-55deg);
+  }
+}
+
+.cancel-button {
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 0px;
+    width: 18px;
+    height: 2px;
+    background-color: white;
+  }
+
+  &::before {
+    transform: rotate(45deg);
+    box-shadow: none;
+  }
+
+  &::after {
+    transform: rotate(-45deg);
+  }
+}
