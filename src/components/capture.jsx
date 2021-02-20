@@ -9,6 +9,11 @@ const CAMERA_TYPES = {
   ENVIRONMENT: 'environment'
 };
 
+const INITIAL = {
+  DEFAULT_WIDTH: 320,
+  DEFAULT_HEIGHT: 0
+};
+
 class Capture extends React.Component {
   constructor(props) {
     super(props);
@@ -18,63 +23,42 @@ class Capture extends React.Component {
 
     this.state = {
       streaming: false,
-      width: 320,
-      height: 0,
+      width: INITIAL.DEFAULT_WIDTH,
+      height: INITIAL.DEFAULT_HEIGHT,
       imgUrl: null,
       blob: null,
       camera: CAMERA_TYPES.ENVIRONMENT
     };
   }
 
-  componentDidMount = () => {
-    console.log(this.state.camera);
+  componentDidMount() {
     this.ctx = this.canvasRef.current.getContext('2d');
     this.startup();
-  }
-
-  setStreaming = (status) => {
-    this.setState({
-      streaming: status
-    });
-  }
-
-  setHeight = (height) => {
-    this.setState({
-      height
-    });
-  }
-
-  setImgUrl = (imgUrl) => {
-    this.setState({
-      imgUrl
-    });
-  }
-
-  setBlob = (blob) => {
-    this.setState({
-      blob
-    });
   }
 
   getBlob = (blob) => {
     const url = URL.createObjectURL(blob);
     blob.lastModified = Date.now();
-    this.setImgUrl(url);
-    this.setBlob(blob);
+    this.setState({
+      imgUrl: url,
+      blob
+    });
   }
 
   startup = () => {
     const video = this.videoRef.current;
-    navigator.mediaDevices.getUserMedia({video: {
-      facingMode: this.state.camera
-    }, audio: false})
-    .then(function (stream) {
-      video.srcObject = stream;
-      video.play();
-    })
-    .catch(function (err) {
-      console.log('An error occurred: ' + err);
-    });
+    if (video) {
+      navigator.mediaDevices.getUserMedia({video: {
+        facingMode: this.state.camera
+      }, audio: false})
+      .then(function (stream) {
+        video.srcObject = stream;
+        video.play();
+      })
+      .catch(function (err) {
+        console.log('An error occurred: ' + err);
+      });
+    }
   }
 
   stopStreamedVideo = (videoElem) => {
@@ -88,16 +72,20 @@ class Capture extends React.Component {
 
   stop = () => {
     const video = this.videoRef.current;
-    this.stopStreamedVideo(video);
-    this.clear();
+    if (video) {
+      this.stopStreamedVideo(video);
+      this.clear();
+    }
   }
 
   onCanPlayHandler = () => {
     const video = this.videoRef.current;
-    if (!this.state.streaming) {
+    if (!this.state.streaming && video) {
       const height = video.videoHeight / (video.videoWidth / this.state.width);
-      this.setHeight(height);
-      this.setStreaming(true);
+      this.setState({
+        streaming: true,
+        height
+      });
     }
   }
 
@@ -106,17 +94,24 @@ class Capture extends React.Component {
     const video = this.videoRef.current;
     const {width, height} = this.state;
     if (width && height) {
-      this.ctx.drawImage(video, 0, 0, width, height);
-      canvas.toBlob(this.getBlob, 'image/jpeg');
+      if (canvas && video) {
+        this.ctx.drawImage(video, 0, 0, width, height);
+        canvas.toBlob(this.getBlob, 'image/jpeg');
+      }
     }
   }
 
   clear = () => {
     const canvas = this.canvasRef.current;
-    this.ctx.clearRect(0, 0, this.state.width, this.state.height);
 
-    const url = canvas.toDataURL('image/jpeg');
-    this.setImgUrl(url);
+    if (canvas) {
+      this.ctx.clearRect(0, 0, this.state.width, this.state.height);
+
+      const url = canvas.toDataURL('image/jpeg');
+      this.setState({
+        imgUrl: url
+      });
+    }
   }
 
   onOkButtonClickHandler = () => {
@@ -130,21 +125,24 @@ class Capture extends React.Component {
   }
 
   onCancelButtonClickHandler = () => {
-    this.setBlob(null);
-    this.setImgUrl(null);
+    this.setState({
+      blob: null,
+      imgUrl: null
+    });
   }
 
   toggleCamera = (currentCamera, callback) => {
-    const camera = currentCamera === CAMERA_TYPES.ENVIRONMENT ? CAMERA_TYPES.USER : CAMERA_TYPES.ENVIRONMENT;
     this.setState({
-      camera
+      camera: currentCamera === CAMERA_TYPES.ENVIRONMENT ? CAMERA_TYPES.USER : CAMERA_TYPES.ENVIRONMENT
     }, callback);
   }
 
   onCameraChangeButtonClickHandler = () => {
     const video = this.videoRef.current;
-    this.stopStreamedVideo(video);
-    this.toggleCamera(this.state.camera, this.startup);
+    if (video) {
+      this.stopStreamedVideo(video);
+      this.toggleCamera(this.state.camera, this.startup);
+    }
   }
 
   render = () => {
@@ -153,8 +151,8 @@ class Capture extends React.Component {
         <div className="capture__mask">
           <div className="capture__container">
             <div className="capture__controls-wrapper">
-              {this.state.imgUrl ? <button className='capture__cancel-button' onClick={this.onCancelButtonClickHandler}>Cancel</button> : null}
-              {this.state.imgUrl ? <button className='capture__ok-button' onClick={this.onOkButtonClickHandler}>Ok</button> : null}
+              {this.state.imgUrl && <button className='capture__cancel-button' onClick={this.onCancelButtonClickHandler}>Cancel</button>}
+              {this.state.imgUrl && <button className='capture__ok-button' onClick={this.onOkButtonClickHandler}>Ok</button>}
             </div>
             <div className="capture__camera">
               <video id="video" ref={this.videoRef} width={this.state.width} height={this.state.height} onCanPlay={this.onCanPlayHandler}>Video stream not available.</video>

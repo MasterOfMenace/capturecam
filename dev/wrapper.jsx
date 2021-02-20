@@ -1,5 +1,5 @@
 import React from 'react';
-import Capture from '../src/components/capture';
+import Capture from '../src/components/Capture';
 
 class Wrapper extends React.Component {
   state = {
@@ -8,27 +8,20 @@ class Wrapper extends React.Component {
     openCapture: false,
   };
 
-  onGetImageButtonClickHandler = () => {
+  setCaptureStatus = (value) => {
     this.setState({
-      openCapture: true
+      openCapture: value
     });
-  };
+  }
 
   onGetImageDataHandler = (blob) => {
-    console.log(blob);
     const dataUrl = this.getUrlFromBlob(blob);
 
     this.setState({
       blob,
       dataUrl,
-      openCapture: false
     });
-  }
-
-  onCancelButtonClickHandler = () => {
-    this.setState({
-      openCapture: false
-    });
+    this.setCaptureStatus(false);
   }
 
   onClearButonClickHandler = () => {
@@ -45,9 +38,15 @@ class Wrapper extends React.Component {
   render = () => {
     return (
       <div className="wrapper">
-        <button className="getImage" onClick={this.onGetImageButtonClickHandler}>Get Image</button>
+        <button className="getImage" onClick={() => this.setCaptureStatus(true)}>Get Image</button>
         <button className="clear" onClick={this.onClearButonClickHandler}>Clear</button>
-        {this.state.openCapture ? <Capture onGetData={this.onGetImageDataHandler} onBackButtonClick={this.onCancelButtonClickHandler}/> : null}
+        {
+          this.state.openCapture &&
+          <Capture
+            onGetData={this.onGetImageDataHandler}
+            onBackButtonClick={() => this.setCaptureStatus(false)}
+          />
+        }
         <div className="captured">
           <img alt="The screen capture will appear in this box." src={this.state.dataUrl}/>
         </div>

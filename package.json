@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack serve --host 0.0.0.0",
+    "dev": "webpack serve --host 0.0.0.0",
     "eslint": "eslint --ext .jsx --ext .js src/",
     "test": "npm run eslint"
   },
