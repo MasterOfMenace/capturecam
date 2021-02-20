@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import switchIcon from './images/switch-camera.svg';
-import goBackIcon from './images/go-back-arrow.svg';
-import './styles/capture.scss';
+import switchIcon from '../images/switch-camera.svg';
+import goBackIcon from '../images/go-back-arrow.svg';
+import '../styles/capture.scss';
 
 const CAMERA_TYPES = {
   USER: 'user',
@@ -50,13 +50,17 @@ class Capture extends React.Component {
     });
   }
 
+  setBlob = (blob) => {
+    this.setState({
+      blob
+    });
+  }
+
   getBlob = (blob) => {
     const url = URL.createObjectURL(blob);
     blob.lastModified = Date.now();
     this.setImgUrl(url);
-    this.setState({
-      blob
-    });
+    this.setBlob(blob);
   }
 
   startup = () => {
@@ -126,10 +130,8 @@ class Capture extends React.Component {
   }
 
   onCancelButtonClickHandler = () => {
-    this.setState({
-      blob: null,
-      imgUrl: null
-    });
+    this.setBlob(null);
+    this.setImgUrl(null);
   }
 
   toggleCamera = (currentCamera, callback) => {
